@@ -585,8 +585,16 @@
         }
       }
 
+      function normalizeFlag(str) {
+        return str
+          .replace(/[\u00a0\u200b-\u200d\ufeff]/g, "") // nbsp / zero-width chars some keyboards insert
+          .replace(/[\u2018\u2019]/g, "'")
+          .replace(/[\u201c\u201d]/g, '"')
+          .trim();
+      }
+
       async function sha256Hex(str) {
-        const buf = new TextEncoder().encode(str.trim());
+        const buf = new TextEncoder().encode(normalizeFlag(str));
         const digest = await crypto.subtle.digest("SHA-256", buf);
         return [...new Uint8Array(digest)]
           .map((b) => b.toString(16).padStart(2, "0"))
@@ -616,7 +624,16 @@
               <button class="hint-toggle" type="button">show hint</button>
               <p class="hint">${c.hint}</p>
               <form class="submit-row" autocomplete="off">
-                <input class="flag-input" type="text" placeholder="flag{...}" aria-label="flag for ${c.title}" />
+                <input
+                  class="flag-input"
+                  type="text"
+                  placeholder="flag{...}"
+                  aria-label="flag for ${c.title}"
+                  autocapitalize="off"
+                  autocorrect="off"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
                 <button class="submit-btn" type="submit">check</button>
               </form>
               <p class="result" role="status"></p>

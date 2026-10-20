@@ -8,6 +8,7 @@
       rel="icon"
       href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzBlMGUwZiIvPgogIDxwb2x5bGluZSBwb2ludHM9IjEwLDkgMTYsMTYgMTAsMjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M4YTk2ZSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cmVjdCB4PSIxNyIgeT0iMjAuNSIgd2lkdGg9IjgiIGhlaWdodD0iMyIgcng9IjEuNSIgZmlsbD0iI2M4YTk2ZSIvPgo8L3N2Zz4K"
     />
+    <meta name="x-ctf-flag" content="ZmxhZ3ttM3RhX3RhZ19tMW5lZH0=" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -57,8 +58,18 @@
         color: var(--frost);
       }
 
+      code {
+        background: var(--surface-raised);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1px 5px;
+        font-size: 0.93em;
+        word-break: break-all;
+        display: inline-block;
+      }
+
       .wrap {
-        max-width: 720px;
+        max-width: 980px;
         margin: 0 auto;
         padding: 48px 20px 80px;
       }
@@ -116,7 +127,7 @@
 
       .tagline {
         color: var(--text-muted);
-        max-width: 52ch;
+        max-width: 62ch;
         margin: 0 0 6px;
       }
 
@@ -141,6 +152,7 @@
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--radius);
+        flex-wrap: wrap;
       }
 
       .status .score {
@@ -167,7 +179,7 @@
 
       .status .bar {
         margin-left: auto;
-        width: 120px;
+        width: 140px;
         height: 4px;
         background: var(--surface-raised);
         border-radius: 2px;
@@ -188,96 +200,157 @@
         transition: width 0.5s ease;
       }
 
-      /* ── mission rows ───────────────────────────────────── */
-      .missions {
-        border-top: 1px solid var(--border);
+      /* ── jeopardy board ──────────────────────────────────── */
+      .board {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(120px, 1fr));
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 4px;
       }
 
-      .row {
-        border-bottom: 1px solid var(--border);
-      }
-
-      .row-head {
+      .col {
         display: flex;
-        align-items: center;
-        gap: 14px;
-        width: 100%;
-        padding: 14px 4px;
-        background: none;
-        border: none;
-        color: inherit;
-        font: inherit;
-        text-align: left;
-        cursor: pointer;
-      }
-      .row-head:focus-visible {
-        outline: 2px solid var(--frost);
-        outline-offset: 2px;
-      }
-
-      .box {
-        flex-shrink: 0;
-        width: 18px;
-        text-align: center;
-        color: var(--text-faint);
-      }
-      .row.solved .box {
-        color: var(--gold);
-      }
-
-      .pts {
-        flex-shrink: 0;
-        width: 48px;
-        color: var(--text-faint);
-        font-size: 13px;
-      }
-      .row.solved .pts {
-        color: var(--gold);
-      }
-
-      .cat {
-        flex-shrink: 0;
-        width: 68px;
-        color: var(--frost);
-        font-size: 12.5px;
-      }
-
-      .title {
-        flex: 1;
+        flex-direction: column;
+        gap: 8px;
         min-width: 0;
-        color: var(--text);
+      }
+
+      .col-head {
+        text-align: center;
+        font-size: 11.5px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--frost);
+        padding: 8px 4px;
+        border-bottom: 1px solid var(--border);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
-      .row.solved .title {
-        color: var(--text-muted);
-        text-decoration: line-through;
-        text-decoration-color: var(--text-faint);
-      }
 
-      .chev {
-        flex-shrink: 0;
+      .tile {
+        aspect-ratio: 1.3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        color: var(--gold);
+        font-family: "Instrument Serif", serif;
+        font-style: italic;
+        font-size: 22px;
+        cursor: pointer;
+        transition:
+          border-color 0.15s ease,
+          transform 0.1s ease;
+      }
+      .tile:hover {
+        border-color: var(--gold);
+      }
+      .tile:focus-visible {
+        outline: 2px solid var(--frost);
+        outline-offset: 2px;
+      }
+      .tile.solved {
         color: var(--text-faint);
-        transition: transform 0.15s ease;
+        background: var(--surface-raised);
       }
-      .row.open .chev {
-        transform: rotate(90deg);
-        color: var(--frost);
+      .tile.solved::after {
+        content: "\2713";
+        font-family: "JetBrains Mono", monospace;
+        font-style: normal;
+        font-size: 15px;
+        color: var(--gold);
+      }
+      .tile.solved span {
+        display: none;
       }
 
-      .row-body {
-        display: none;
-        padding: 2px 4px 22px 32px;
+      @media (max-width: 720px) {
+        .board {
+          grid-template-columns: repeat(6, 96px);
+        }
+        .col-head {
+          font-size: 10px;
+        }
+        .tile {
+          font-size: 17px;
+        }
       }
-      .row.open .row-body {
-        display: block;
+
+      /* ── modal ───────────────────────────────────────────── */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 5, 7, 0.78);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 50;
+      }
+      .modal-overlay[hidden] {
+        display: none;
+      }
+
+      .modal {
+        position: relative;
+        width: 100%;
+        max-width: 520px;
+        max-height: 86vh;
+        overflow-y: auto;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 26px 24px 24px;
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: none;
+        border: none;
+        color: var(--text-faint);
+        font-size: 20px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 4px;
+      }
+      .modal-close:hover {
+        color: var(--danger);
+      }
+
+      .modal-meta {
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--frost);
+        margin: 0 0 6px;
+      }
+      .modal-meta b {
+        color: var(--gold);
+      }
+
+      .modal h2 {
+        font-family: "Instrument Serif", serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 28px;
+        margin: 0 0 14px;
+        padding-right: 26px;
+        color: var(--text);
       }
 
       .desc {
         color: var(--text-muted);
-        max-width: 56ch;
+        max-width: 60ch;
         margin: 0 0 12px;
+      }
+      .desc code {
+        color: var(--frost);
       }
 
       .hint-toggle {
@@ -307,14 +380,13 @@
       .submit-row {
         display: flex;
         gap: 0;
-        margin-top: 16px;
-        max-width: 420px;
+        margin-top: 18px;
       }
 
       .flag-input {
         flex: 1;
         min-width: 0;
-        background: var(--surface);
+        background: var(--ink);
         border: 1px solid var(--border);
         border-right: none;
         color: var(--text);
@@ -359,7 +431,7 @@
         color: var(--danger);
       }
 
-      .row.solved .submit-row {
+      .modal.solved .submit-row {
         display: none;
       }
       .solved-note {
@@ -368,7 +440,7 @@
         color: var(--gold);
         font-size: 13.5px;
       }
-      .row.solved .solved-note {
+      .modal.solved .solved-note {
         display: block;
       }
 
@@ -455,6 +527,7 @@
     </style>
   </head>
   <body>
+    <!-- flag{v13w_s0urc3_ftw} -->
     <div class="wrap">
       <div class="rule"></div>
       <div class="brand">
@@ -472,10 +545,12 @@
         </svg>
         <b>0x7f3a</b><span class="sep">::</span>ctf
       </div>
-      <h1>six flags, one king-server.</h1>
+      <h1>six categories, thirty questions.</h1>
       <p class="tagline">
-        Every flag below is hidden somewhere in the terminal on the portfolio
-        site. Nothing here tells you where &mdash; that's the terminal's job.
+        Jeopardy-style board &mdash; web, pwn, crypto, reverse engineering,
+        forensics and AD/DC. 500 points a category, 100 a question. Some
+        flags live in the terminal on the portfolio site; the rest are
+        self-contained right here.
       </p>
       <a class="back-link" href="https://0x7f3a.github.io/#terminal"
         >&larr; open the terminal</a
@@ -488,18 +563,35 @@
 
       <div class="status">
         <div class="score">
-          <span id="scoreNum">0</span><span class="den" id="scoreDen">/180</span>
+          <span id="scoreNum">0</span><span class="den" id="scoreDen">/3000</span>
         </div>
-        <div class="meta"><b id="solvedCount">0</b>/6 flags captured</div>
+        <div class="meta"><b id="solvedCount">0</b>/30 flags captured</div>
         <div class="bar"><i id="scoreBar"></i></div>
       </div>
 
-      <main class="missions" id="missions"></main>
+      <main class="board" id="board"></main>
+
+      <div class="modal-overlay" id="modalOverlay" hidden>
+        <div class="modal" id="modal">
+          <button class="modal-close" id="modalClose" aria-label="close">&times;</button>
+          <p class="modal-meta"><b id="modalPts"></b>&nbsp;&middot;&nbsp;<span id="modalCat"></span></p>
+          <h2 id="modalTitle"></h2>
+          <p class="desc" id="modalDesc"></p>
+          <button class="hint-toggle" type="button" id="modalHintBtn">show hint</button>
+          <p class="hint" id="modalHint"></p>
+          <form class="submit-row" id="modalForm" autocomplete="off">
+            <input class="flag-input" id="modalInput" type="text" placeholder="flag{...}" aria-label="flag" />
+            <button class="submit-btn" type="submit">check</button>
+          </form>
+          <p class="result" id="modalResult" role="status"></p>
+          <p class="solved-note">captured &mdash; nice work.</p>
+        </div>
+      </div>
 
       <div class="celebrate" id="celebrate" hidden>
         <div class="sparks">* . * . * . * . *</div>
-        <p class="line">king-server is yours.</p>
-        <p>all six flags captured &mdash; nice work.</p>
+        <p class="line">the board is cleared.</p>
+        <p>all thirty flags captured &mdash; nice work.</p>
       </div>
 
       <footer>
@@ -511,63 +603,288 @@
     <script>
       const CHALLENGES = [
         {
-          id: "warmup",
-          title: "home turf",
-          category: "misc",
-          points: 10,
-          desc: "Every shell starts somewhere. Look around your own home directory.",
-          hint: "cat the file sitting right there.",
-          hash: "c80c92212a8e584e5907713dabbdce4b39783a59103ca9654abfe94412900381",
+          id: 'web_devpanel',
+          title: 'dev panel',
+          category: 'web',
+          points: 100,
+          desc: 'Enumerate whatever\'s running on the hidden port you found during recon, then read the file it exposes.',
+          hint: 'a directory brute-forcer, then pull the file it finds.',
+          hash: '3a67f4daa341fd39d4a8ff03f0028f66bd0aae9ea31cd45b3732ae5b4690f869',
         },
         {
-          id: "kings_throne",
-          title: "king's throne",
-          category: "privesc",
-          points: 20,
-          desc: "Local privilege escalation doesn't get much easier than this.",
-          hint: "become root, then see where root lives.",
-          hash: "3ca82b84dfb0f165b70c6a5b5653d85c0be75a70793c5d7dcf865636c3c84ef5",
+          id: 'web_allports',
+          title: 'not all ports',
+          category: 'web',
+          points: 100,
+          desc: 'A default scan only checks 1,000 ports. Something on this box is listening past them.',
+          hint: 'nmap has a flag for scanning every port, not just the common ones.',
+          hash: '24405c9774bb140c0eb2a8f9ecfa82b621e58ad413f8cbd442d948c42a8b560b',
         },
         {
-          id: "all_ports",
-          title: "not all ports",
-          category: "recon",
-          points: 25,
-          desc: "The default scan only checks 1,000 ports. Something's past them.",
-          hint: "nmap has a flag for scanning every port, not just the common ones.",
-          hash: "24405c9774bb140c0eb2a8f9ecfa82b621e58ad413f8cbd442d948c42a8b560b",
+          id: 'web_cookie',
+          title: 'cookie monster',
+          category: 'web',
+          points: 100,
+          desc: 'This platform drops a cookie the moment the page loads. Check devtools &rarr; Application &rarr; Cookies, or just run <code>document.cookie</code> in the console.',
+          hint: 'the value is base64 &mdash; atob() it.',
+          hash: 'be8d2d0ecef75b433899bfb67e6f1b4fb70ae4585104df406432847cde45ea8a',
         },
         {
-          id: "dev_panel",
-          title: "dev panel",
-          category: "web",
-          points: 35,
-          desc: "Enumerate whatever's running on the port you just found, then read what's there.",
-          hint: "a directory brute-forcer, then pull the file it finds.",
-          hash: "3a67f4daa341fd39d4a8ff03f0028f66bd0aae9ea31cd45b3732ae5b4690f869",
+          id: 'web_meta',
+          title: 'head space',
+          category: 'web',
+          points: 100,
+          desc: 'View this page\'s source (Ctrl+U) and look in the &lt;head&gt;. One &lt;meta&gt; tag doesn\'t belong.',
+          hint: 'its content attribute is base64.',
+          hash: '487a5951ac540dbb2570f59b63fa23b3911d8e40b98089a70945ccaaca902dd3',
         },
         {
-          id: "brute_force",
-          title: "cold case",
-          category: "creds",
-          points: 40,
-          desc: "You now have a username and a login panel. Crack it.",
-          hint: "point a brute-forcer at that panel's login.",
-          hash: "7ccf18c07502344cc64e12fe5d24796b843a97d73ccd78c385f24369f3b3bf19",
+          id: 'web_localstorage',
+          title: 'stale cache',
+          category: 'web',
+          points: 100,
+          desc: 'This page writes more to localStorage than just your progress. Check devtools &rarr; Application &rarr; Local Storage for a key that isn\'t the progress tracker.',
+          hint: 'key starts with 0x7f3a_debug, value is base64.',
+          hash: '827cf808df69d0682fc5a86d01b74947464d30aa73ce9c998b44a84a5608ff72',
         },
         {
-          id: "gtfobin_root",
-          title: "escape room",
-          category: "privesc",
-          points: 50,
-          desc: "Log into the box remotely with what you cracked, check what you're allowed to run as root, and get out of the editor.",
-          hint: "sudo -l, then abuse whatever it hands you.",
-          hash: "959068f205ea66e767787bab332d18f587ffbfa353c2ba49632bdf0d022fdc75",
+          id: 'pwn_kingsthrone',
+          title: 'king\'s throne',
+          category: 'pwn',
+          points: 100,
+          desc: 'Local privilege escalation doesn\'t get much easier than this. Become root, then see where root lives.',
+          hint: 'sudo su, then cat the file sitting in root\'s home.',
+          hash: '3ca82b84dfb0f165b70c6a5b5653d85c0be75a70793c5d7dcf865636c3c84ef5',
+        },
+        {
+          id: 'pwn_gtfobin',
+          title: 'escape room',
+          category: 'pwn',
+          points: 100,
+          desc: 'Log into the box remotely with what you cracked, check what you\'re allowed to run as root, then escape the editor.',
+          hint: 'sudo -l, then abuse whatever it hands you.',
+          hash: '959068f205ea66e767787bab332d18f587ffbfa353c2ba49632bdf0d022fdc75',
+        },
+        {
+          id: 'pwn_hydra',
+          title: 'cold case',
+          category: 'pwn',
+          points: 100,
+          desc: 'You now have a username and a login panel. Crack it.',
+          hint: 'point a brute-forcer at that panel\'s login.',
+          hash: '7ccf18c07502344cc64e12fe5d24796b843a97d73ccd78c385f24369f3b3bf19',
+        },
+        {
+          id: 'pwn_stack',
+          title: 'stack math',
+          category: 'pwn',
+          points: 100,
+          desc: 'A 16-byte buffer sits before a 4-byte stack canary, which sits before an 8-byte saved base pointer, which sits before the return address. To overwrite the return address without tripping the canary you must replay the canary\'s own bytes, then fill the saved base pointer, then write your new address. How many total bytes do you write before the return address starts? Submit the number: <code>flag{N}</code>',
+          hint: '16 + 4 + 8 = the padding before the return address.',
+          hash: '661117ec6fd2fe96b17b2259db0884bb3d755e5455a4a170b39260e3417934bf',
+        },
+        {
+          id: 'pwn_suid',
+          title: 'the sticky bit\'s cousin',
+          category: 'pwn',
+          points: 100,
+          desc: 'A SUID binary runs with its owner\'s privileges no matter who executes it. In a permission string like <code>rwsr-xr-x</code>, one letter replaces the owner\'s execute bit to mark that behavior. Submit that single letter: <code>flag{x}</code>',
+          hint: 'it\'s not x, and it\'s not the group or other bits.',
+          hash: '223a8bda69d50886983f08a2ec607e93246f9e48e8dca92aab604cbd20ad0bff',
+        },
+        {
+          id: 'crypto_rot13',
+          title: 'et tu, brute',
+          category: 'crypto',
+          points: 100,
+          desc: 'Decode this:<br><code>synt{pnrfne_jnf_urer}</code>',
+          hint: 'classic shift cipher, 13 is half the alphabet.',
+          hash: '05d9708232e391eac886363ec3c4d04a5ec1411c1e0048e458a623a955d5baf3',
+        },
+        {
+          id: 'crypto_base64',
+          title: 'not encryption',
+          category: 'crypto',
+          points: 100,
+          desc: 'Decode this:<br><code>ZmxhZ3tiNHNlNjRfaXNfbm90X2VuY3J5cHRpb259</code>',
+          hint: 'atob(), or any base64 decoder.',
+          hash: 'e39456942624a56e29b82bed9b8c0f9d6c4cc13c489eb2f15dbe297f0d6c8569',
+        },
+        {
+          id: 'crypto_hex',
+          title: 'two digits at a time',
+          category: 'crypto',
+          points: 100,
+          desc: 'Decode this:<br><code>666c61677b64656164626565665f696e5f61736369697d</code>',
+          hint: 'each pair of hex digits is one ASCII byte.',
+          hash: '36e2fb411d946fa9601ae957280ae47e17a14b03ca155044851c5f97c4434049',
+        },
+        {
+          id: 'crypto_xor',
+          title: 'single byte key',
+          category: 'crypto',
+          points: 100,
+          desc: 'Every byte of the flag was XORed with the same single-byte key:<br><code>757f7274686b23614c7a604c6176657661607a717f766e</code><br>The plaintext starts with <code>flag{</code> &mdash; that\'s enough to recover the key.',
+          hint: 'XOR the first ciphertext byte with \'f\' (0x66) to get the key, then XOR every byte with it.',
+          hash: '86244c70b98124af6e1a3a68c7e07c5bfe1eedec7a4a64d331def253543c2689',
+        },
+        {
+          id: 'crypto_atbash',
+          title: 'older than caesar',
+          category: 'crypto',
+          points: 100,
+          desc: 'Decode this (Atbash &mdash; the alphabet reversed, a&harr;z, b&harr;y...):<br><code>uozt{zgyzhs_rh_zmxrvmg}</code>',
+          hint: 'a&harr;z, b&harr;y, c&harr;x ...',
+          hash: 'f906b7baa4c1ccda5be5c05b8b87d995115599683d310682cc0cfbec74cf20f3',
+        },
+        {
+          id: 'rev_console',
+          title: 'console gremlin',
+          category: 'rev',
+          points: 100,
+          desc: 'This loader builds a string from character codes, but the array is stored reversed to slow down static analysis. Paste this in your console:<br><code>String.fromCharCode(...[125,103,110,49,115,114,51,95,118,51,114,95,53,106,123,103,97,108,102].reverse())</code>',
+          hint: 'just run it &mdash; that\'s the whole \'reversing\' part.',
+          hash: 'f2451898be2857b82a3bbe1dc4b841236ad8ade637a127df1908f1a543d6b44d',
+        },
+        {
+          id: 'rev_doubleb64',
+          title: 'double wrapped',
+          category: 'rev',
+          points: 100,
+          desc: 'This value is base64 inside base64:<br><code>Wm14aFozdGtNSFZpYkROZmQzSTBjSEF6WkgwPQ==</code>',
+          hint: 'atob(atob(x))',
+          hash: 'c1afe54193421f27616ec5c143d0b3fa6b0c9f3fe4bb9730a568ba1ceec7d947',
+        },
+        {
+          id: 'rev_charcodes',
+          title: 'fromCharCode',
+          category: 'rev',
+          points: 100,
+          desc: 'A tiny loader builds the flag with:<br><code>String.fromCharCode(102,108,97,103,123,99,104,52,114,95,99,48,100,101,115,95,114,95,102,117,110,125)</code><br>What does it print?',
+          hint: 'run it in the console, or decode the codes by hand.',
+          hash: '83985d706685cdb73b7d7f9363d80b4b0c309ffe14f1fc1850817d775d4e8127',
+        },
+        {
+          id: 'rev_reverse',
+          title: 'read it backwards',
+          category: 'rev',
+          points: 100,
+          desc: 'Reverse engineer this. Literally &mdash; reverse this string:<br><code>}gnirts_eht_esrever{galf</code>',
+          hint: 's.split(\'\').reverse().join(\'\')',
+          hash: '0ebfdeec90b6155fd54dd4710fd044ac0c2ada5780ef9df5542515f6c3f212eb',
+        },
+        {
+          id: 'rev_asm',
+          title: 'tiny disassembly',
+          category: 'rev',
+          points: 100,
+          desc: 'What\'s the final value in eax?<br><code>mov eax, 7<br>mov ebx, 6<br>imul eax, ebx<br>add eax, 1</code><br>Submit it as <code>flag{N}</code>',
+          hint: '7 &times; 6, then +1.',
+          hash: '1a5a7a57cab74435e2e861122408bbdba74f2e32fb29943f0e6a899c519cf037',
+        },
+        {
+          id: 'forensics_warmup',
+          title: 'home turf',
+          category: 'forensics',
+          points: 100,
+          desc: 'Every shell starts somewhere. Look around your own home directory.',
+          hint: 'cat the file sitting right there.',
+          hash: 'c80c92212a8e584e5907713dabbdce4b39783a59103ca9654abfe94412900381',
+        },
+        {
+          id: 'forensics_source',
+          title: 'view source',
+          category: 'forensics',
+          points: 100,
+          desc: 'This results page hides something in its own HTML. View the page source (Ctrl+U) and look near the top of &lt;body&gt;.',
+          hint: 'Ctrl+U, then Ctrl+F for \'flag\'.',
+          hash: 'fc2e2630356f2173f75428f65a5373b23b6ae1145a2d6fe271b7fe40dd8c4c57',
+        },
+        {
+          id: 'forensics_exif',
+          title: 'exif ghost',
+          category: 'forensics',
+          points: 100,
+          desc: 'Recovered from a photo\'s metadata, the Comment field reads:<br><code>ZmxhZ3tleDFmX2Q0dDRfbDM0a3N9</code>',
+          hint: 'that\'s base64, not a hash.',
+          hash: '5bcc219a54876a54f00e7c0e3f359f81ac007fcbed8fb4cd1ae47712022fea99',
+        },
+        {
+          id: 'forensics_timestamp',
+          title: 'timestamp math',
+          category: 'forensics',
+          points: 100,
+          desc: 'A log shows an event opened at <code>2024-01-01T00:00:00Z</code> and closed at <code>2024-01-01T00:07:00Z</code>. Submit the duration in seconds: <code>flag{N}</code>',
+          hint: '7 minutes &times; 60.',
+          hash: '59fb410d2f19421e1c2cd770ad25abf33e146ea15836bb9fb0083199d8b0c7b9',
+        },
+        {
+          id: 'forensics_favicon',
+          title: 'favicon archaeology',
+          category: 'forensics',
+          points: 100,
+          desc: 'Every page on this site shares the same favicon, embedded as base64 SVG in the &lt;link rel="icon"&gt; tag. Decode it and find the hex color used for the polyline\'s stroke. Submit it lowercase, no #: <code>flag{hexcode}</code>',
+          hint: 'view-source, find the href, decode the base64.',
+          hash: 'db56a9950a97a017a92bd43a2ceba961562c0bc0371aeba618b0cc1c5ad8e1ae',
+        },
+        {
+          id: 'adcs_golden',
+          title: 'forge the crown',
+          category: 'adcs',
+          points: 100,
+          desc: 'In Kerberos, forging a Ticket Granting Ticket using the krbtgt account\'s hash &mdash; letting you authenticate as literally anyone, forever &mdash; is called a ___ Ticket attack. Fill in the blank: <code>flag{word}</code>',
+          hint: 'it\'s the same metal as a trophy.',
+          hash: '90cb7f2c44cc289cf7b860ce71d7797c9fe17554639a646a2dfd2e9ddf98bfbe',
+        },
+        {
+          id: 'adcs_silver',
+          title: 'second place ticket',
+          category: 'adcs',
+          points: 100,
+          desc: 'Forging a Service Ticket directly with a service account\'s NTLM hash, skipping the KDC entirely, is called a ___ Ticket attack. Fill in the blank: <code>flag{word}</code>',
+          hint: 'one step down from gold.',
+          hash: '4696e78744b0c0b153c5e07570f61939363492cd31d72cfda093f96e62071a01',
+        },
+        {
+          id: 'adcs_dcsync',
+          title: 'replication rights',
+          category: 'adcs',
+          points: 100,
+          desc: 'Running a DCSync attack requires two specific extended rights on the domain object: \'Replicating Directory Changes\' and \'Replicating Directory Changes ___\'. Give the missing word: <code>flag{word}</code>',
+          hint: 'think total scope, not a partial set.',
+          hash: '6529d4fff2f0f733d3580c704edc12eeda1534f34e56ffa1ab30f8e5e34e3a98',
+        },
+        {
+          id: 'adcs_unconstrained',
+          title: 'cached trust',
+          category: 'adcs',
+          points: 100,
+          desc: 'One Kerberos delegation setting, when enabled on a computer object, caches a copy of every user\'s TGT that authenticates to it &mdash; the classic path to domain takeover if that box is compromised. Name it: <code>flag{word_word}</code>, lowercase, underscore-separated.',
+          hint: 'it\'s the opposite of \'constrained\'.',
+          hash: 'bf648f6abefa8dd475beeab4ad1fd3b9f8feacad35ce76a9501af43e103dde16',
+        },
+        {
+          id: 'adcs_zerologon',
+          title: 'zero trust, zero logon',
+          category: 'adcs',
+          points: 100,
+          desc: 'CVE-2020-1472, nicknamed \'Zerologon\', let attackers reset a Domain Controller\'s machine account password by abusing a flaw in one authentication protocol\'s AES-CFB8 implementation. The exploit\'s own nickname contains that protocol\'s name. Spell it: <code>flag{name}</code>',
+          hint: 'it\'s right there in \'Zerologon\'.',
+          hash: 'a54121732fc3b4b01fd99a2f0024ca63297ed18bb763d3186cb4009600b5da0b',
         },
       ];
 
-      const STORAGE_KEY = "0x7f3a_ctf_progress";
+      const STORAGE_KEY = "0x7f3a_ctf_progress_v2";
       const TOTAL_POINTS = CHALLENGES.reduce((s, c) => s + c.points, 0);
+      const CATS = [...new Set(CHALLENGES.map((c) => c.category))];
+      const CAT_LABEL = {
+        web: "web",
+        pwn: "pwn",
+        crypto: "crypto",
+        rev: "rev",
+        forensics: "forensics",
+        adcs: "ad/dc",
+      };
       let solved = new Set();
 
       try {
@@ -575,6 +892,18 @@
         if (raw) solved = new Set(JSON.parse(raw));
       } catch (e) {
         /* ignore corrupt storage */
+      }
+
+      // Two flags live in this page's own browser storage, set once on
+      // load. Nothing here ever leaves the browser or touches a network.
+      try {
+        document.cookie =
+          "0x7f3a_role=" + btoa("flag{c00ki3_m0nst3r}") + "; path=/; SameSite=Lax";
+        if (!localStorage.getItem("0x7f3a_debug")) {
+          localStorage.setItem("0x7f3a_debug", btoa("flag{d3bug_l3ft_0n}"));
+        }
+      } catch (e) {
+        /* storage unavailable */
       }
 
       function save() {
@@ -585,109 +914,120 @@
         }
       }
 
-      function normalizeFlag(str) {
-        return str
-          .replace(/[\u00a0\u200b-\u200d\ufeff]/g, "") // nbsp / zero-width chars some keyboards insert
-          .replace(/[\u2018\u2019]/g, "'")
-          .replace(/[\u201c\u201d]/g, '"')
-          .trim();
-      }
-
       async function sha256Hex(str) {
-        const buf = new TextEncoder().encode(normalizeFlag(str));
+        const buf = new TextEncoder().encode(str.trim());
         const digest = await crypto.subtle.digest("SHA-256", buf);
         return [...new Uint8Array(digest)]
           .map((b) => b.toString(16).padStart(2, "0"))
           .join("");
       }
 
-      const missionsEl = document.getElementById("missions");
+      const boardEl = document.getElementById("board");
+      const overlay = document.getElementById("modalOverlay");
+      const modal = document.getElementById("modal");
+      const modalPts = document.getElementById("modalPts");
+      const modalCat = document.getElementById("modalCat");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalDesc = document.getElementById("modalDesc");
+      const modalHintBtn = document.getElementById("modalHintBtn");
+      const modalHint = document.getElementById("modalHint");
+      const modalForm = document.getElementById("modalForm");
+      const modalInput = document.getElementById("modalInput");
+      const modalResult = document.getElementById("modalResult");
 
-      function render() {
-        missionsEl.innerHTML = "";
-        CHALLENGES.forEach((c) => {
-          const isSolved = solved.has(c.id);
-          const row = document.createElement("div");
-          row.className = "row" + (isSolved ? " solved" : "");
-          row.id = "row-" + c.id;
+      let activeId = null;
 
-          row.innerHTML = `
-            <button class="row-head" aria-expanded="false">
-              <span class="box">${isSolved ? "x" : " "}</span>
-              <span class="pts">${c.points}pt</span>
-              <span class="cat">${c.category}</span>
-              <span class="title">${c.title}</span>
-              <span class="chev">&rsaquo;</span>
-            </button>
-            <div class="row-body">
-              <p class="desc">${c.desc}</p>
-              <button class="hint-toggle" type="button">show hint</button>
-              <p class="hint">${c.hint}</p>
-              <form class="submit-row" autocomplete="off">
-                <input
-                  class="flag-input"
-                  type="text"
-                  placeholder="flag{...}"
-                  aria-label="flag for ${c.title}"
-                  autocapitalize="off"
-                  autocorrect="off"
-                  autocomplete="off"
-                  spellcheck="false"
-                />
-                <button class="submit-btn" type="submit">check</button>
-              </form>
-              <p class="result" role="status"></p>
-              <p class="solved-note">captured &mdash; nice work.</p>
-            </div>
-          `;
+      function renderBoard() {
+        boardEl.innerHTML = "";
+        CATS.forEach((cat) => {
+          const col = document.createElement("div");
+          col.className = "col";
 
-          const head = row.querySelector(".row-head");
-          head.addEventListener("click", () => {
-            const open = row.classList.toggle("open");
-            head.setAttribute("aria-expanded", String(open));
+          const head = document.createElement("div");
+          head.className = "col-head";
+          head.textContent = CAT_LABEL[cat] || cat;
+          col.appendChild(head);
+
+          CHALLENGES.filter((c) => c.category === cat).forEach((c) => {
+            const isSolved = solved.has(c.id);
+            const tile = document.createElement("button");
+            tile.type = "button";
+            tile.className = "tile" + (isSolved ? " solved" : "");
+            tile.setAttribute("aria-label", c.title + ", " + c.points + " points");
+            tile.innerHTML = "<span>" + c.points + "</span>";
+            tile.addEventListener("click", () => openModal(c.id));
+            col.appendChild(tile);
           });
 
-          const hintBtn = row.querySelector(".hint-toggle");
-          const hintEl = row.querySelector(".hint");
-          hintBtn.addEventListener("click", () => {
-            const shown = hintEl.classList.toggle("shown");
-            hintBtn.textContent = shown ? "hide hint" : "show hint";
-          });
-
-          const form = row.querySelector(".submit-row");
-          const input = row.querySelector(".flag-input");
-          const result = row.querySelector(".result");
-          form.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const val = input.value;
-            if (!val.trim()) return;
-            if (!(window.crypto && window.crypto.subtle)) {
-              result.textContent = "can't verify flags without https.";
-              result.className = "result err";
-              return;
-            }
-            result.textContent = "checking...";
-            result.className = "result";
-            const digest = await sha256Hex(val);
-            if (digest === c.hash) {
-              solved.add(c.id);
-              save();
-              render();
-              const freshRow = document.getElementById("row-" + c.id);
-              freshRow.classList.add("open");
-              freshRow
-                .querySelector(".row-head")
-                .setAttribute("aria-expanded", "true");
-              updateStatus();
-            } else {
-              result.textContent = "wrong flag. try again.";
-              result.className = "result err";
-            }
-          });
-
-          missionsEl.appendChild(row);
+          boardEl.appendChild(col);
         });
       }
+
+      function openModal(id) {
+        const c = CHALLENGES.find((x) => x.id === id);
+        if (!c) return;
+        activeId = id;
+        const isSolved = solved.has(id);
+
+        modalPts.textContent = c.points + "pt";
+        modalCat.textContent = CAT_LABEL[c.category] || c.category;
+        modalTitle.textContent = c.title;
+        modalDesc.innerHTML = c.desc;
+        modalHint.innerHTML = c.hint;
+        modalHint.classList.remove("shown");
+        modalHintBtn.textContent = "show hint";
+        modalInput.value = "";
+        modalResult.textContent = "";
+        modalResult.className = "result";
+        modal.classList.toggle("solved", isSolved);
+        overlay.hidden = false;
+        if (!isSolved) setTimeout(() => modalInput.focus(), 10);
+      }
+
+      function closeModal() {
+        overlay.hidden = true;
+        activeId = null;
+      }
+
+      document.getElementById("modalClose").addEventListener("click", closeModal);
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) closeModal();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !overlay.hidden) closeModal();
+      });
+
+      modalHintBtn.addEventListener("click", () => {
+        const shown = modalHint.classList.toggle("shown");
+        modalHintBtn.textContent = shown ? "hide hint" : "show hint";
+      });
+
+      modalForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!activeId) return;
+        const c = CHALLENGES.find((x) => x.id === activeId);
+        const val = modalInput.value;
+        if (!val.trim()) return;
+        if (!(window.crypto && window.crypto.subtle)) {
+          modalResult.textContent = "can't verify flags without https.";
+          modalResult.className = "result err";
+          return;
+        }
+        modalResult.textContent = "checking...";
+        modalResult.className = "result";
+        const digest = await sha256Hex(val);
+        if (digest === c.hash) {
+          solved.add(c.id);
+          save();
+          renderBoard();
+          modal.classList.add("solved");
+          modalResult.textContent = "";
+          updateStatus();
+        } else {
+          modalResult.textContent = "wrong flag. try again.";
+          modalResult.className = "result err";
+        }
+      });
 
       function updateStatus() {
         const points = CHALLENGES.filter((c) => solved.has(c.id)).reduce(
@@ -708,15 +1048,16 @@
         if (!confirm("Clear all captured flags on this browser?")) return;
         solved = new Set();
         save();
-        render();
+        renderBoard();
         updateStatus();
+        closeModal();
       });
 
       if (!(window.crypto && window.crypto.subtle)) {
         document.getElementById("noCrypto").style.display = "block";
       }
 
-      render();
+      renderBoard();
       updateStatus();
     </script>
   </body>

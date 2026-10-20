@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>0x7f3a :: ctf</title>
-    <link rel="icon" href="data:," />
+    <link
+      rel="icon"
+      href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzBlMGUwZiIvPgogIDxwb2x5bGluZSBwb2ludHM9IjEwLDkgMTYsMTYgMTAsMjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M4YTk2ZSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cmVjdCB4PSIxNyIgeT0iMjAuNSIgd2lkdGg9IjgiIGhlaWdodD0iMyIgcng9IjEuNSIgZmlsbD0iI2M4YTk2ZSIvPgo8L3N2Zz4K"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -73,10 +76,22 @@
       }
 
       .brand {
+        display: flex;
+        align-items: center;
+        gap: 9px;
         font-size: 15px;
         font-weight: 700;
         letter-spacing: 0.02em;
         color: var(--text-muted);
+      }
+
+      .brand .mark {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        background: var(--ink);
+        border: 1px solid var(--border);
       }
 
       .brand b {
@@ -442,7 +457,21 @@
   <body>
     <div class="wrap">
       <div class="rule"></div>
-      <div class="brand"><b>0x7f3a</b><span class="sep">::</span>ctf</div>
+      <div class="brand">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect width="32" height="32" rx="7" fill="#0e0e0f" />
+          <polyline
+            points="10,9 16,16 10,23"
+            fill="none"
+            stroke="#c8a96e"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <rect x="17" y="20.5" width="8" height="3" rx="1.5" fill="#c8a96e" />
+        </svg>
+        <b>0x7f3a</b><span class="sep">::</span>ctf
+      </div>
       <h1>six flags, one king-server.</h1>
       <p class="tagline">
         Every flag below is hidden somewhere in the terminal on the portfolio
@@ -459,8 +488,7 @@
 
       <div class="status">
         <div class="score">
-          <span id="scoreNum">0</span
-          ><span class="den" id="scoreDen">/180</span>
+          <span id="scoreNum">0</span><span class="den" id="scoreDen">/180</span>
         </div>
         <div class="meta"><b id="solvedCount">0</b>/6 flags captured</div>
         <div class="bar"><i id="scoreBar"></i></div>
@@ -475,10 +503,7 @@
       </div>
 
       <footer>
-        <span
-          >progress saves to this browser only &mdash; nothing is sent
-          anywhere.</span
-        >
+        <span>progress saves to this browser only &mdash; nothing is sent anywhere.</span>
         <button class="reset" id="resetBtn">rm -rf progress</button>
       </footer>
     </div>

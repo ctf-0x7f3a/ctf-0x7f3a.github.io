@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>0x7f3a :: ctf</title>
+    <link rel="icon" href="data:," />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #0a0a0d;
+        --surface: #121218;
+        --surface-raised: #17171f;
+        --border: rgba(255, 255, 255, 0.09);
+        --text: #eceaf4;
+        --text-muted: #8c8ca0;
+        --text-faint: #55556a;
+        --gold: #c8a96e;
+        --frost: #7fd6e3;
+        --danger: #e06c75;
+        --radius: 2px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: var(--ink);
+        color: var(--text);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 15px;
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      ::selection {
+        background: var(--gold);
+        color: var(--ink);
+      }
+
+      a {
+        color: var(--frost);
+      }
+
+      .wrap {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 48px 20px 80px;
+      }
+
+      /* ── header ─────────────────────────────────────────── */
+      .rule {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          var(--gold),
+          var(--frost) 55%,
+          transparent
+        );
+        margin-bottom: 28px;
+      }
+
+      .brand {
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        color: var(--text-muted);
+      }
+
+      .brand b {
+        color: var(--text);
+        font-weight: 700;
+      }
+
+      .brand .sep {
+        color: var(--frost);
+        margin: 0 2px;
+      }
+
+      h1 {
+        font-family: "Instrument Serif", serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 44px;
+        line-height: 1.15;
+        margin: 10px 0 14px;
+        color: var(--text);
+      }
+
+      .tagline {
+        color: var(--text-muted);
+        max-width: 52ch;
+        margin: 0 0 6px;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-top: 4px;
+        font-size: 13.5px;
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+      }
+      .back-link:hover {
+        border-bottom-color: currentColor;
+      }
+
+      /* ── status strip ───────────────────────────────────── */
+      .status {
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+        margin: 36px 0 28px;
+        padding: 18px 20px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+      }
+
+      .status .score {
+        font-family: "Instrument Serif", serif;
+        font-style: italic;
+        font-size: 40px;
+        color: var(--gold);
+        white-space: nowrap;
+      }
+      .status .score span.den {
+        font-family: "JetBrains Mono", monospace;
+        font-style: normal;
+        font-size: 18px;
+        color: var(--text-faint);
+      }
+
+      .status .meta {
+        color: var(--text-muted);
+        font-size: 13.5px;
+      }
+      .status .meta b {
+        color: var(--text);
+      }
+
+      .status .bar {
+        margin-left: auto;
+        width: 120px;
+        height: 4px;
+        background: var(--surface-raised);
+        border-radius: 2px;
+        overflow: hidden;
+        flex-shrink: 0;
+        display: none;
+      }
+      @media (min-width: 540px) {
+        .status .bar {
+          display: block;
+        }
+      }
+      .status .bar i {
+        display: block;
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--gold), var(--frost));
+        transition: width 0.5s ease;
+      }
+
+      /* ── mission rows ───────────────────────────────────── */
+      .missions {
+        border-top: 1px solid var(--border);
+      }
+
+      .row {
+        border-bottom: 1px solid var(--border);
+      }
+
+      .row-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        padding: 14px 4px;
+        background: none;
+        border: none;
+        color: inherit;
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+      }
+      .row-head:focus-visible {
+        outline: 2px solid var(--frost);
+        outline-offset: 2px;
+      }
+
+      .box {
+        flex-shrink: 0;
+        width: 18px;
+        text-align: center;
+        color: var(--text-faint);
+      }
+      .row.solved .box {
+        color: var(--gold);
+      }
+
+      .pts {
+        flex-shrink: 0;
+        width: 48px;
+        color: var(--text-faint);
+        font-size: 13px;
+      }
+      .row.solved .pts {
+        color: var(--gold);
+      }
+
+      .cat {
+        flex-shrink: 0;
+        width: 68px;
+        color: var(--frost);
+        font-size: 12.5px;
+      }
+
+      .title {
+        flex: 1;
+        min-width: 0;
+        color: var(--text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .row.solved .title {
+        color: var(--text-muted);
+        text-decoration: line-through;
+        text-decoration-color: var(--text-faint);
+      }
+
+      .chev {
+        flex-shrink: 0;
+        color: var(--text-faint);
+        transition: transform 0.15s ease;
+      }
+      .row.open .chev {
+        transform: rotate(90deg);
+        color: var(--frost);
+      }
+
+      .row-body {
+        display: none;
+        padding: 2px 4px 22px 32px;
+      }
+      .row.open .row-body {
+        display: block;
+      }
+
+      .desc {
+        color: var(--text-muted);
+        max-width: 56ch;
+        margin: 0 0 12px;
+      }
+
+      .hint-toggle {
+        background: none;
+        border: none;
+        color: var(--text-faint);
+        font: inherit;
+        font-size: 13px;
+        padding: 0;
+        cursor: pointer;
+        text-decoration: underline dotted;
+        text-underline-offset: 3px;
+      }
+      .hint-toggle:hover {
+        color: var(--frost);
+      }
+      .hint {
+        display: none;
+        color: var(--frost);
+        font-size: 13.5px;
+        margin: 10px 0 0;
+      }
+      .hint.shown {
+        display: block;
+      }
+
+      .submit-row {
+        display: flex;
+        gap: 0;
+        margin-top: 16px;
+        max-width: 420px;
+      }
+
+      .flag-input {
+        flex: 1;
+        min-width: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-right: none;
+        color: var(--text);
+        font: inherit;
+        font-size: 14px;
+        padding: 9px 12px;
+        border-radius: var(--radius) 0 0 var(--radius);
+      }
+      .flag-input::placeholder {
+        color: var(--text-faint);
+      }
+      .flag-input:focus {
+        outline: none;
+        border-color: var(--frost);
+      }
+
+      .submit-btn {
+        flex-shrink: 0;
+        background: var(--surface-raised);
+        border: 1px solid var(--border);
+        color: var(--text);
+        font: inherit;
+        font-size: 14px;
+        padding: 9px 16px;
+        cursor: pointer;
+        border-radius: 0 var(--radius) var(--radius) 0;
+      }
+      .submit-btn:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+
+      .result {
+        margin-top: 10px;
+        font-size: 13.5px;
+        min-height: 1.4em;
+      }
+      .result.ok {
+        color: var(--gold);
+      }
+      .result.err {
+        color: var(--danger);
+      }
+
+      .row.solved .submit-row {
+        display: none;
+      }
+      .solved-note {
+        display: none;
+        margin-top: 10px;
+        color: var(--gold);
+        font-size: 13.5px;
+      }
+      .row.solved .solved-note {
+        display: block;
+      }
+
+      /* ── footer ──────────────────────────────────────────── */
+      footer {
+        margin-top: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        color: var(--text-faint);
+        font-size: 12.5px;
+      }
+      .reset {
+        background: none;
+        border: none;
+        color: var(--text-faint);
+        font: inherit;
+        font-size: 12.5px;
+        cursor: pointer;
+        text-decoration: underline dotted;
+        text-underline-offset: 3px;
+        padding: 0;
+      }
+      .reset:hover {
+        color: var(--danger);
+      }
+
+      .no-crypto {
+        margin: 0 0 28px;
+        padding: 12px 14px;
+        border: 1px solid var(--danger);
+        border-radius: var(--radius);
+        color: var(--danger);
+        font-size: 13.5px;
+        display: none;
+      }
+
+      /* ── completion banner ──────────────────────────────── */
+      .celebrate {
+        margin: 32px 0 0;
+        padding: 22px 20px;
+        border: 1px solid var(--gold);
+        border-radius: var(--radius);
+        background: var(--surface);
+        text-align: center;
+      }
+      .celebrate[hidden] {
+        display: none;
+      }
+      .celebrate .line {
+        font-family: "Instrument Serif", serif;
+        font-style: italic;
+        font-size: 26px;
+        color: var(--gold);
+        margin: 0 0 6px;
+      }
+      .celebrate p {
+        color: var(--text-muted);
+        margin: 0;
+        font-size: 13.5px;
+      }
+      .celebrate .sparks {
+        color: var(--frost);
+        letter-spacing: 6px;
+        font-size: 12px;
+        margin-bottom: 10px;
+        animation: drift 3s ease-in-out infinite;
+      }
+      @keyframes drift {
+        0%,
+        100% {
+          opacity: 0.5;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .celebrate .sparks {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="rule"></div>
+      <div class="brand"><b>0x7f3a</b><span class="sep">::</span>ctf</div>
+      <h1>six flags, one king-server.</h1>
+      <p class="tagline">
+        Every flag below is hidden somewhere in the terminal on the portfolio
+        site. Nothing here tells you where &mdash; that's the terminal's job.
+      </p>
+      <a class="back-link" href="https://0x7f3a.github.io/#terminal"
+        >&larr; open the terminal</a
+      >
+
+      <p class="no-crypto" id="noCrypto">
+        This browser can't verify flags on an insecure (non-https) connection.
+        Open this page over https to submit.
+      </p>
+
+      <div class="status">
+        <div class="score">
+          <span id="scoreNum">0</span
+          ><span class="den" id="scoreDen">/180</span>
+        </div>
+        <div class="meta"><b id="solvedCount">0</b>/6 flags captured</div>
+        <div class="bar"><i id="scoreBar"></i></div>
+      </div>
+
+      <main class="missions" id="missions"></main>
+
+      <div class="celebrate" id="celebrate" hidden>
+        <div class="sparks">* . * . * . * . *</div>
+        <p class="line">king-server is yours.</p>
+        <p>all six flags captured &mdash; nice work.</p>
+      </div>
+
+      <footer>
+        <span
+          >progress saves to this browser only &mdash; nothing is sent
+          anywhere.</span
+        >
+        <button class="reset" id="resetBtn">rm -rf progress</button>
+      </footer>
+    </div>
+
+    <script>
+      const CHALLENGES = [
+        {
+          id: "warmup",
+          title: "home turf",
+          category: "misc",
+          points: 10,
+          desc: "Every shell starts somewhere. Look around your own home directory.",
+          hint: "cat the file sitting right there.",
+          hash: "c80c92212a8e584e5907713dabbdce4b39783a59103ca9654abfe94412900381",
+        },
+        {
+          id: "kings_throne",
+          title: "king's throne",
+          category: "privesc",
+          points: 20,
+          desc: "Local privilege escalation doesn't get much easier than this.",
+          hint: "become root, then see where root lives.",
+          hash: "3ca82b84dfb0f165b70c6a5b5653d85c0be75a70793c5d7dcf865636c3c84ef5",
+        },
+        {
+          id: "all_ports",
+          title: "not all ports",
+          category: "recon",
+          points: 25,
+          desc: "The default scan only checks 1,000 ports. Something's past them.",
+          hint: "nmap has a flag for scanning every port, not just the common ones.",
+          hash: "24405c9774bb140c0eb2a8f9ecfa82b621e58ad413f8cbd442d948c42a8b560b",
+        },
+        {
+          id: "dev_panel",
+          title: "dev panel",
+          category: "web",
+          points: 35,
+          desc: "Enumerate whatever's running on the port you just found, then read what's there.",
+          hint: "a directory brute-forcer, then pull the file it finds.",
+          hash: "3a67f4daa341fd39d4a8ff03f0028f66bd0aae9ea31cd45b3732ae5b4690f869",
+        },
+        {
+          id: "brute_force",
+          title: "cold case",
+          category: "creds",
+          points: 40,
+          desc: "You now have a username and a login panel. Crack it.",
+          hint: "point a brute-forcer at that panel's login.",
+          hash: "7ccf18c07502344cc64e12fe5d24796b843a97d73ccd78c385f24369f3b3bf19",
+        },
+        {
+          id: "gtfobin_root",
+          title: "escape room",
+          category: "privesc",
+          points: 50,
+          desc: "Log into the box remotely with what you cracked, check what you're allowed to run as root, and get out of the editor.",
+          hint: "sudo -l, then abuse whatever it hands you.",
+          hash: "959068f205ea66e767787bab332d18f587ffbfa353c2ba49632bdf0d022fdc75",
+        },
+      ];
+
+      const STORAGE_KEY = "0x7f3a_ctf_progress";
+      const TOTAL_POINTS = CHALLENGES.reduce((s, c) => s + c.points, 0);
+      let solved = new Set();
+
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) solved = new Set(JSON.parse(raw));
+      } catch (e) {
+        /* ignore corrupt storage */
+      }
+
+      function save() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify([...solved]));
+        } catch (e) {
+          /* storage unavailable, progress just won't persist */
+        }
+      }
+
+      async function sha256Hex(str) {
+        const buf = new TextEncoder().encode(str.trim());
+        const digest = await crypto.subtle.digest("SHA-256", buf);
+        return [...new Uint8Array(digest)]
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join("");
+      }
+
+      const missionsEl = document.getElementById("missions");
+
+      function render() {
+        missionsEl.innerHTML = "";
+        CHALLENGES.forEach((c) => {
+          const isSolved = solved.has(c.id);
+          const row = document.createElement("div");
+          row.className = "row" + (isSolved ? " solved" : "");
+          row.id = "row-" + c.id;
+
+          row.innerHTML = `
+            <button class="row-head" aria-expanded="false">
+              <span class="box">${isSolved ? "x" : " "}</span>
+              <span class="pts">${c.points}pt</span>
+              <span class="cat">${c.category}</span>
+              <span class="title">${c.title}</span>
+              <span class="chev">&rsaquo;</span>
+            </button>
+            <div class="row-body">
+              <p class="desc">${c.desc}</p>
+              <button class="hint-toggle" type="button">show hint</button>
+              <p class="hint">${c.hint}</p>
+              <form class="submit-row" autocomplete="off">
+                <input class="flag-input" type="text" placeholder="flag{...}" aria-label="flag for ${c.title}" />
+                <button class="submit-btn" type="submit">check</button>
+              </form>
+              <p class="result" role="status"></p>
+              <p class="solved-note">captured &mdash; nice work.</p>
+            </div>
+          `;
+
+          const head = row.querySelector(".row-head");
+          head.addEventListener("click", () => {
+            const open = row.classList.toggle("open");
+            head.setAttribute("aria-expanded", String(open));
+          });
+
+          const hintBtn = row.querySelector(".hint-toggle");
+          const hintEl = row.querySelector(".hint");
+          hintBtn.addEventListener("click", () => {
+            const shown = hintEl.classList.toggle("shown");
+            hintBtn.textContent = shown ? "hide hint" : "show hint";
+          });
+
+          const form = row.querySelector(".submit-row");
+          const input = row.querySelector(".flag-input");
+          const result = row.querySelector(".result");
+          form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const val = input.value;
+            if (!val.trim()) return;
+            if (!(window.crypto && window.crypto.subtle)) {
+              result.textContent = "can't verify flags without https.";
+              result.className = "result err";
+              return;
+            }
+            result.textContent = "checking...";
+            result.className = "result";
+            const digest = await sha256Hex(val);
+            if (digest === c.hash) {
+              solved.add(c.id);
+              save();
+              render();
+              const freshRow = document.getElementById("row-" + c.id);
+              freshRow.classList.add("open");
+              freshRow
+                .querySelector(".row-head")
+                .setAttribute("aria-expanded", "true");
+              updateStatus();
+            } else {
+              result.textContent = "wrong flag. try again.";
+              result.className = "result err";
+            }
+          });
+
+          missionsEl.appendChild(row);
+        });
+      }
+
+      function updateStatus() {
+        const points = CHALLENGES.filter((c) => solved.has(c.id)).reduce(
+          (s, c) => s + c.points,
+          0,
+        );
+        document.getElementById("scoreNum").textContent = points;
+        document.getElementById("scoreDen").textContent = "/" + TOTAL_POINTS;
+        document.getElementById("solvedCount").textContent = solved.size;
+        document.getElementById("scoreBar").style.width =
+          Math.round((points / TOTAL_POINTS) * 100) + "%";
+        const banner = document.getElementById("celebrate");
+        if (solved.size === CHALLENGES.length) banner.hidden = false;
+        else banner.hidden = true;
+      }
+
+      document.getElementById("resetBtn").addEventListener("click", () => {
+        if (!confirm("Clear all captured flags on this browser?")) return;
+        solved = new Set();
+        save();
+        render();
+        updateStatus();
+      });
+
+      if (!(window.crypto && window.crypto.subtle)) {
+        document.getElementById("noCrypto").style.display = "block";
+      }
+
+      render();
+      updateStatus();
+    </script>
+  </body>
+</html>
